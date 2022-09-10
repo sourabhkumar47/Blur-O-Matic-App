@@ -2,13 +2,16 @@ package com.example.background.workers
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.net.Uri
+import android.text.TextUtils
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.example.background.KEY_IMAGE_URI
-import com.example.background.R
 
 private const val TAG = "BlurWorker"
+
 class BlurWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
 
     override fun doWork(): Result {
@@ -20,9 +23,16 @@ class BlurWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
         makeStatusNotification("Blurring image", appContext)
 
         return try {
-            val picture = BitmapFactory.decodeResource(
-                appContext.resources,
-                R.drawable.android_cupcake)
+            //Check that resourceUri obtained from the Data that was passed in is not empty
+            if (TextUtils.isEmpty(resourceUri)) {
+                Log.e(TAG, "Invalid given uri")
+                throw IllegalArgumentException("Invalid input uri")
+            }
+            val resolver = appContext.contentResolver
+
+            val picture = BitmapFactory.decodeStream(
+                resolver.openInputStream(Uri.parse(resourceUri))
+            )
 
             val output = blurBitmap(picture, appContext)
 
@@ -31,7 +41,9 @@ class BlurWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
 
             makeStatusNotification("Output is $outputUri", appContext)
 
+            val outputData = workDataOf(KEY_IMAGE_URI to outputUri.toString())
             Result.success()
+
         } catch (throwable: Throwable) {
             Log.e(TAG, "Error applying blur")
             Result.failure()
