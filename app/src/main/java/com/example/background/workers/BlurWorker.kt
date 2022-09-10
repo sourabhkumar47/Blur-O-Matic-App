@@ -22,6 +22,9 @@ class BlurWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
 
         makeStatusNotification("Blurring image", appContext)
 
+        // This is an utility function added to emulate slower work.
+        sleep()
+
         return try {
             //Check that resourceUri obtained from the Data that was passed in is not empty
             if (TextUtils.isEmpty(resourceUri)) {
@@ -42,6 +45,7 @@ class BlurWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
             makeStatusNotification("Output is $outputUri", appContext)
 
             val outputData = workDataOf(KEY_IMAGE_URI to outputUri.toString())
+
             Result.success()
 
         } catch (throwable: Throwable) {
