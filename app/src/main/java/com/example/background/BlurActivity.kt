@@ -18,8 +18,7 @@ package com.example.background
 
 import android.os.Bundle
 import android.view.View
-
-androidx.lifecycle.Observer
+import androidx.lifecycle.Observer
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.WorkInfo
