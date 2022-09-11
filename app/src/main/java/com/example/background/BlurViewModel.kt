@@ -20,6 +20,7 @@ import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.work.*
@@ -123,6 +124,18 @@ class BlurViewModel(application: Application) : ViewModel() {
             builder.putString(KEY_IMAGE_URI, imageUri.toString())
         }
         return builder.build()
+    }
+
+    // Get the WorkInfo
+    // New instance variable for the WorkInfo
+    internal val outputWorkInfos: LiveData<List<WorkInfo>>
+
+    // Modify the existing init block in the BlurViewModel class to this:
+    init {
+        imageUri = getImageUri(application.applicationContext)
+        // This transformation makes sure that whenever the current work Id changes the WorkInfo
+        // the UI is listening to changes
+        outputWorkInfos = workManager.getWorkInfosByTagLiveData(TAG_OUTPUT)
     }
 
     class BlurViewModelFactory(private val application: Application) :
