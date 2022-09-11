@@ -22,10 +22,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.example.background.workers.BlurWorker
 import com.example.background.workers.CleanupWorker
 import com.example.background.workers.SaveImageToFileWorker
@@ -51,12 +48,15 @@ class BlurViewModel(application: Application) : ViewModel() {
 
     internal fun applyBlur(blurLevel: Int) {
         // Add WorkRequest to Cleanup temporary images
+
         var continuation = workManager
-            .beginWith(
+            .beginUniqueWork(
+                IMAGE_MANIPULATION_WORK_NAME,
+                ExistingWorkPolicy.REPLACE,
                 OneTimeWorkRequest
                     .from(CleanupWorker::class.java)
             )
-
+        Ensure unique work
         // Add WorkRequests to blur the image the number of times requested
         for (i in 0 until blurLevel) {
             val blurBuilder = OneTimeWorkRequestBuilder<BlurWorker>()
