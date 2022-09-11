@@ -79,6 +79,7 @@ class BlurViewModel(application: Application) : ViewModel() {
 
         // Add WorkRequest to save the image to the filesystem
         val save = OneTimeWorkRequestBuilder<SaveImageToFileWorker>()
+            .addTag(TAG_OUTPUT) // <- ADDED TAG
             .build()
 
         continuation = continuation.then(save)
