@@ -49,6 +49,12 @@ class BlurViewModel(application: Application) : ViewModel() {
     internal fun applyBlur(blurLevel: Int) {
         // Add WorkRequest to Cleanup temporary images
 
+        // REPLACE THIS CODE:
+// var continuation = workManager
+//            .beginWith(OneTimeWorkRequest
+//            .from(CleanupWorker::class.java))
+// WITH
+
         var continuation = workManager
             .beginUniqueWork(
                 IMAGE_MANIPULATION_WORK_NAME,
@@ -56,7 +62,7 @@ class BlurViewModel(application: Application) : ViewModel() {
                 OneTimeWorkRequest
                     .from(CleanupWorker::class.java)
             )
-        Ensure unique work
+
         // Add WorkRequests to blur the image the number of times requested
         for (i in 0 until blurLevel) {
             val blurBuilder = OneTimeWorkRequestBuilder<BlurWorker>()
