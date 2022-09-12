@@ -51,10 +51,10 @@ class BlurViewModel(application: Application) : ViewModel() {
         // Add WorkRequest to Cleanup temporary images
 
         // REPLACE THIS CODE:
-// var continuation = workManager
-//            .beginWith(OneTimeWorkRequest
-//            .from(CleanupWorker::class.java))
-// WITH
+        // var continuation = workManager
+        // .beginWith(OneTimeWorkRequest
+        // .from(CleanupWorker::class.java))
+        // WITH
 
         var continuation = workManager
             .beginUniqueWork(
@@ -78,8 +78,14 @@ class BlurViewModel(application: Application) : ViewModel() {
             continuation = continuation.then(blurBuilder.build())
         }
 
+        //Create charging constraint
+        val constraints = Constraints.Builder()
+            .setRequiresCharging(true)
+            .build()
+
         // Add WorkRequest to save the image to the filesystem
         val save = OneTimeWorkRequestBuilder<SaveImageToFileWorker>()
+            .setConstraints(constraints)
             .addTag(TAG_OUTPUT) // <- ADDED TAG
             .build()
 
