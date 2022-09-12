@@ -138,6 +138,11 @@ class BlurViewModel(application: Application) : ViewModel() {
         outputWorkInfos = workManager.getWorkInfosByTagLiveData(TAG_OUTPUT)
     }
 
+    //Cancel button
+    internal fun cancelWork(){
+        workManager.cancelUniqueWork(IMAGE_MANIPULATION_WORK_NAME)
+    }
+
     class BlurViewModelFactory(private val application: Application) :
         ViewModelProvider.Factory {
 
