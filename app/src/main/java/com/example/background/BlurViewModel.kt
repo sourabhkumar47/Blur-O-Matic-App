@@ -34,13 +34,16 @@ class BlurViewModel(application: Application) : ViewModel() {
     internal var imageUri: Uri? = null
     internal var outputUri: Uri? = null
 
-    init {
-        imageUri = getImageUri(application.applicationContext)
-    }
+    // New instance variable for the WorkInfo
+    internal val outputWorkInfos: LiveData<List<WorkInfo>>
 
     //Get WorkManager in the ViewModel
 
     private val workManager = WorkManager.getInstance(application)
+
+    init {
+        imageUri = getImageUri(application.applicationContext)
+    }
 
     /**
      * Create the WorkRequest to apply the blur and save the resulting image
@@ -133,8 +136,7 @@ class BlurViewModel(application: Application) : ViewModel() {
     }
 
     // Get the WorkInfo
-    // New instance variable for the WorkInfo
-    internal val outputWorkInfos: LiveData<List<WorkInfo>>
+
 
     // Modify the existing init block in the BlurViewModel class to this:
     init {

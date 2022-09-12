@@ -42,10 +42,6 @@ class BlurActivity : AppCompatActivity() {
 
         binding.goButton.setOnClickListener { viewModel.applyBlur(blurLevel) }
 
-        // Observe work status, added in onCreate()
-        viewModel.outputWorkInfos.observe(this, workInfosObserver())
-
-
         // Setup view output image file button
         binding.seeFileButton.setOnClickListener {
             viewModel.outputUri?.let { currentUri ->
@@ -58,6 +54,10 @@ class BlurActivity : AppCompatActivity() {
 
         //Cancel Button
         binding.cancelButton.setOnClickListener { viewModel.cancelWork() }
+
+        // Observe work status
+        viewModel.outputWorkInfos.observe(this, workInfosObserver())
+
     }
 
     // Define the observer function
