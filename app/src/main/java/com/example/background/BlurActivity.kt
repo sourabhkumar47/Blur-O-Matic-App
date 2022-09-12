@@ -36,16 +36,6 @@ class BlurActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        //Setup view output image file button
-        binding.seeFileButton.setOnClickListener {
-            viewModel.outputUri?.let { currentUri ->
-                val actionView = Intent(Intent.ACTION_VIEW, currentUri)
-                actionView.resolveActivity(packageManager)?.run {
-                    startActivity(actionView)
-                }
-            }
-        }
-
         super.onCreate(savedInstanceState)
         binding = ActivityBlurBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -54,6 +44,17 @@ class BlurActivity : AppCompatActivity() {
 
         // Observe work status, added in onCreate()
         viewModel.outputWorkInfos.observe(this, workInfosObserver())
+
+
+        // Setup view output image file button
+        binding.seeFileButton.setOnClickListener {
+            viewModel.outputUri?.let { currentUri ->
+                val actionView = Intent(Intent.ACTION_VIEW, currentUri)
+                actionView.resolveActivity(packageManager)?.run {
+                    startActivity(actionView)
+                }
+            }
+        }
     }
 
     // Define the observer function
@@ -76,7 +77,6 @@ class BlurActivity : AppCompatActivity() {
             if (workInfo.state.isFinished) {
                 showWorkFinished()
 
-                //Set the URI and show the button
                 // Normally this processing, which is not directly related to drawing views on
                 // screen would be in the ViewModel. For simplicity we are keeping it here.
                 val outputImageUri = workInfo.outputData.getString(KEY_IMAGE_URI)
